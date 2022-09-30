@@ -11,8 +11,7 @@ For start a default instance, only needs the following command
 ```minikube
 minikube start
 ```
-thus minikube starts a simple node with the default configuration, but with some flags you 
-can change others parameters, the `minikube start` and `stop` commands allow us to create custom profiles
+thus minikube starts a simple node with the default configuration, but with some flags you can change others parameters, the `minikube start` and `stop` commands allow us to create custom profiles
 `--profile` or `-p` flags.
 
 Exits other flags or commands that allow custom clusters to be created with Minikube
@@ -26,8 +25,7 @@ Exits other flags or commands that allow custom clusters to be created with Mini
 | `--cni=calico`                 | **Not required**. Not clear yet                                                                           |
 | `--container-runtime=cri-o`    | **Not required**. Select the container runtime in your cluster                                            |
 
-For some flags you had been installed an extra software like docker and/or podman. Not in all cases in others flags Minikube 
-can be set up, CNI (network plugin) for example. 
+For some flags you had been installed an extra software like docker and/or podman. Not in all cases in others flags Minikube can be set up, CNI (network plugin) for example. 
 ```
 minikube start  --kubernetes-version=v1.20 --driver=docker --nodes=2 --cpus=2 -p  dockertest
 ```
@@ -37,12 +35,9 @@ The `minikube profile` command allows us to view the status of all clusters in a
 minikube profile list
 ```
 
-Others commands to use with Minikube to show a output and information about the node, some examples are `minikube node list`
-to show a list of the nodes of a cluster, and others like `minikube ip -n node-m02`, where ip can show the ip of but with `-n node-m02` 
-only allow to show a specific ip from the node selected.
+Others commands to use with Minikube to show a output and information about the node, some examples are `minikube node list` to show a list of the nodes of a cluster, and others like `minikube ip -n node-m02`, where ip can show the ip of but with `-n node-m02` only allow to show a specific ip from the node selected.
 
-We can stop with the command `minikube -p dockertest` or delete clusters with `minikube delete -p dockertest`, reminder 
-in delete you'll to select the specific cluster with `-p` or the command will delete the default or the first cluster.
+We can stop with the command `minikube -p dockertest` or delete clusters with `minikube delete -p dockertest`, reminder in delete you'll to select the specific cluster with `-p` or the command will delete the default or the first cluster.
 
 ### Accessing to the cluster
 To access the Kubernetes cluster have some methods:
