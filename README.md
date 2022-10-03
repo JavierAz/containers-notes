@@ -6,7 +6,7 @@ This repo is to take notes about kubernetes, docker, minikube, etc
 
 Coming soon!
 
-## Minikube
+## Kubernetes with  Minikube
 For start a default instance, only needs the following command
 ```minikube
 minikube start
@@ -44,11 +44,89 @@ To access the Kubernetes cluster have some methods:
 
 - kubectl
   - The Kubernetes Command Line Interface (CLI), is very flexible to integrate with other systems, it can be used remotely from anywhere to access a cluster
+  - activate the autocomplete needs run the following command ```source <(kubectl completion zsh)```
+  - NOTE for myself: check if minikube is running!
 - from the dashboard
   - Kubernetes Dashboard provided a Web-based User Interface to interact with kubernetes cluster, it's still a preferred tool to users who are not as proficient with the CLI
+  - Needs enable some metrics to display in the dashboard e.g: `minikube addons enable metrics-server`
+  - To start the dashboard from the terminal you need run the following command: `minikube dashboard`
 - via APIs
   - Is the main component of the Kubernetes control plane, can be divided in three independent group types:
     - Core Group
     - Named group
     - System-wide
+  - Using `kubectl proxy` command you can authenticate to use the API server
 
+### Building blocks
+
+#### Namespaces
+Kubernetes generally creates four Namespaces: `kube-syste`, `kube-public`, `kube-node-lease` and `default`
+- kube-system contains the objects created by kubernetes system
+- default contains the objects and the resources created by admins and devs
+- kube-public is special, is unsecured and readable by anyone for exposing public information
+- kube-node-lease used for node heartbeat data
+
+#### Pods
+A Pod is the smallest Kubernetes workload object, which represents a single instance of the app.
+Single - and Multi-Container Pods for stand-alone pod object's definition manifest in YAML format:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+  labels:
+    run: nginx-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.20.2
+    ports:
+    - containerPort: 80
+```
+
+With this YAML definition we can create a single pod, firstly create the file:
+```
+vim nginx.yaml
+```
+Secondly we apply the pod
+```
+kubectl apply -f nginx.yaml
+```
+Finally we check if was created
+```
+kubectl get pods -o wide
+```
+If something is wrong in ours pods we can get some information with `kubectl describe pods 'namepod'` or delete `kubectl delete -f nginx.yaml`.
+
+Usually we don't deploy a stand-alone pod, so we need do more replicas like this example, thus we only run a command and start some pods.
+ReplicaSet is, in part, teh next-generation ReplicationController, we can scale the number of Pods running a specific application container image
+
+```yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: php-redis
+        image: gcr.io/google_samples/gb-frontend:v3
+```
+
+#### Labels
+Labels are key-value pairs attached to kubernetes objects, used to organize and select subset of objects, based on the requirements in place
+
+
+#### DaemonSets
+Are operators designed to manage node agents, they are resemble ReplicaSet and Deployment operators when managing multiples Pod replicas and application updates.
