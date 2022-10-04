@@ -1,7 +1,5 @@
 # containers-notes
 
-This repo is to take notes about kubernetes, docker, minikube, etc
-
 ## Docker
 
 Coming soon!
@@ -66,6 +64,8 @@ Kubernetes generally creates four Namespaces: `kube-syste`, `kube-public`, `kube
 - kube-public is special, is unsecured and readable by anyone for exposing public information
 - kube-node-lease used for node heartbeat data
 
+Create namespace: `kubectl create namespace some-name`
+
 #### Pods
 A Pod is the smallest Kubernetes workload object, which represents a single instance of the app.
 Single - and Multi-Container Pods for stand-alone pod object's definition manifest in YAML format:
@@ -127,6 +127,28 @@ spec:
 #### Labels
 Labels are key-value pairs attached to kubernetes objects, used to organize and select subset of objects, based on the requirements in place
 
-
 #### DaemonSets
 Are operators designed to manage node agents, they are resemble ReplicaSet and Deployment operators when managing multiples Pod replicas and application updates.
+
+#### Services
+When we work with apps deployed to a Kubernetes cluster commonly needs other applications or clients, the solution would be port mapping but isn't "simple".
+he solution is much more sophisticated, with the involvement of the kube-proxy node agent, IP tables, routing rules, cluster DNS server, all collectively implementing a micro-load balancing mechanism that exposes a container's port to the cluster, even to the outside world if desired. This mechanism is called a Service and it is the recommended method to expose any containerized app to the Kubernetes network.
+
+### Security
+#### Authentication
+Kubernetes doesn't have an object like _user_ or _usernames_ but it supports two kinds of _users_:
+- Normal Users
+- Service Accounts: communicates with API servers.
+
+#### Authorization
+Node authorization is a special-purpose which specifically authorizes API requests made by kubelet.
+Or attribute-Based Access Control where a some type of users have some privileges in the sources to:
+- regulate the access to resources based on the Roles of individual users
+- Restrict resources access by specific operations
+- We can create two kind of roles:
+  - Role: grant access to resources within a specific namespace
+  - ClusterRole: grants the same permissions as Role does, but its scope is cluster-wide
+
+#### Admission Control
+Used to specify granular access control policies, where we force these policies using different admission controllers like, ResourceQuota, DefaultStorageClass, AlwaysPullImages, etc.
+With this command `--enable-admision-plugins`, and can also be implemented though custom plugins, for dynamic admission control 
