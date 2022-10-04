@@ -152,3 +152,37 @@ Or attribute-Based Access Control where a some type of users have some privilege
 #### Admission Control
 Used to specify granular access control policies, where we force these policies using different admission controllers like, ResourceQuota, DefaultStorageClass, AlwaysPullImages, etc.
 With this command `--enable-admision-plugins`, and can also be implemented though custom plugins, for dynamic admission control 
+
+### Services
+This is a object used to abstract the communication between cluster internal microservices or with the external world.
+Labels and Selector use a **key-value** pair format, and using that we can group Pods into logical sets. We assign a name to the logical grouping, referred to as a Service. The following is an example of a Service object definition:
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-svc
+spec:
+  selector:
+    app: frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+```
+#### kube-proxy
+Is responsible for implementing the Service configuration on behalf of and administrator or dev, to enable traffic routing to an expose application running in Pods. Also with the iptables implement the load-balancing mechanism because if you don't apply some policies the load-balancing will be randomly. 
+
+To get connection outside the cluster from the Pod, you'll need change the configuration `kubectl edit svc name-pod` and change TYPE from _ClusterIP_ to _NodePort_
+
+#### ServiceTypes 
+- **LoadBalancer:** Only work if the underlying infra supports the automatic creation of Load Balancer and have respective support in kubernetes.
+
+  - NodePort and ClusterIP are automatically created, and the external load balancer will route to them
+  - The service is exposed at a static port on each worker node
+  - The service is exposed externally using underlying cloud provider's load balancer feature
+
+- **ExternalIP:** Can be mapped to an _ExternalIP_ address iff it can route to one or more of the worker nodes. This gets routed to one of the services endpoints but this type of service requires an external cloud provider.
+- **ExternalName:** is a special because that has no Selector and does not define any endpoints. When accessed within the cluster, it returns a CNAME record of an externally configured service.
+
+### Deployment
+
