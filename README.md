@@ -185,4 +185,15 @@ To get connection outside the cluster from the Pod, you'll need change the confi
 - **ExternalName:** is a special because that has no Selector and does not define any endpoints. When accessed within the cluster, it returns a CNAME record of an externally configured service.
 
 ### Deployment
+Will be using the CLI:
+- First we need to create a YAML file with the content required
+- We'll create the Deployment from the YAML configuration file. example: `kubectl create -f name.yaml`
+- If you want check Pods and Replicas, run the following command `kubectl get replicasets` & `kubectl get pods`
+- For expose an app we need to create a Service, with the following command `kubectl create -f nameofService.yaml` or wth a more direct method is Expose a deployment with **kubectl expose** command: `kubectl expose deployment webserver --name= --type=NodePort`
+- For check list the Services: `kubectl get services`
+- But if you want more information about some Service only run this command `kubectl describe service web-service`
+
+What happened if the app inside the Pod doesn't respond, we need to restart it and we need check tje liveness command is checking the existence of a file _/tmp/healthy_, the existence of this file is configured to be checked every **n** seconds using the periodSeconds parameter.  
+
+### Kubernetes Volume Management
 
