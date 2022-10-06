@@ -188,7 +188,7 @@ To get connection outside the cluster from the Pod, you'll need change the confi
 Will be using the CLI:
 - First we need to create a YAML file with the content required
 - We'll create the Deployment from the YAML configuration file. example: `kubectl create -f name.yaml`
-- If you want check Pods and Replicas, run the following command `kubectl get replicasets` & `kubectl get pods`
+- If you want check Pods and Replicas, run the following command `kubectl get replicasets` & `kubectl get pods` or `kubectl get all`
 - For expose an app we need to create a Service, with the following command `kubectl create -f nameofService.yaml` or wth a more direct method is Expose a deployment with **kubectl expose** command: `kubectl expose deployment webserver --name= --type=NodePort`
 - For check list the Services: `kubectl get services`
 - But if you want more information about some Service only run this command `kubectl describe service web-service`
@@ -196,4 +196,56 @@ Will be using the CLI:
 What happened if the app inside the Pod doesn't respond, we need to restart it and we need check tje liveness command is checking the existence of a file _/tmp/healthy_, the existence of this file is configured to be checked every **n** seconds using the periodSeconds parameter.  
 
 ### Kubernetes Volume Management
+We will manage other types of Pods, because these ones can be either data producers, data consumers, or both. That types need must outlive to the Pod in order to be aggregated and possibly loaded into analytics engines.
+So we have Volumes of several types and a few other forms of storages resources containers data management, like **PersistentVolume** and **PersistentVolumeClaim**.
 
+#### Volumes
+As we know, containers in Pods are ephemeral, so we these ones failed, restarted, or deleted all the data inside is deleted. Kubernetes to overcome this problem uses Volumes, where this uses storage technologies to be a mount point on the container's file system backed by a storage medium. In Kubernetes a Volume is linked to a Pod and can be shared among the containers of that Pod.
+
+A **PersistentVolumeClaim** is a request for storage by a user, this one for that one resource based on type, access mode, and size. There are three access mode:
+- ReadWriteOnce (a single node)
+- ReadOnlyMany (many nodes)
+- ReadWriteMany (many nodes)
+
+This is an example for a YAML file to create Volumes:
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: blue-app
+  name: blue-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blue-app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: blue-app
+        type: canary
+    spec:
+      volumes:
+      - name: host-volume
+        hostPath:
+          path: /home/docker/blue-shared-volume
+      containers:
+      - image: nginx
+        name: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: host-volume
+      - image: debian
+        name: debian
+        volumeMounts:
+        - mountPath: /host-vol
+          name: host-volume
+        command: ["/bin/sh", "-c", "echo Welcome to BLUE App! > /host-vol/index.html ; sleep infinity"]
+status: {}
+```
