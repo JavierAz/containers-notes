@@ -249,3 +249,42 @@ spec:
         command: ["/bin/sh", "-c", "echo Welcome to BLUE App! > /host-vol/index.html ; sleep infinity"]
 status: {}
 ```
+### ConfigMaps and Secrets
+While we need to deploy the applications these ones need authentication or something like that. Is easier config secrets to the costumer requirements.
+
+#### ConfigMaps
+Using ConfigMaps, we pass configuration data as key-value pairs, which can uses like environment variables, sets of commands and arguments, or volumes. 
+Create the ConfigMap: 
+```
+kubectl create configmap my-config --from-literal=key1=value1 --from-literal=key2=value2
+```
+Display the ConfigMap details
+```
+kubectl get configmaps my-config -o yaml
+```
+Or if you have a YAML file you also can create the ConfigMap with the following command: `kubectl create -f file.yaml`
+
+#### Secrets
+In some cases we need to provided a password, certificate or something like that but in the YAML or JSON file that is dangerous and insecure. A Secret object can help to encode before sharing.
+The Secret data is stored as plain text inside **etcd**, therefore admins must limit access to the API server and **etcd**. They can be created like this example:
+```
+kubectl create secret generic my-password --from-literal=password=mysqlpassword
+```
+We can get some information about the secret with `kubectl get secret my-password` or `kubectl describe secret my-password`
+
+In the following example  is a Secret inside a Pod
+```yaml
+spec:
+  containers:
+  - image: wordpress:4.7.3-apache
+    name: wordpress
+    volumeMounts:
+    - name: secret-volume
+      mountPath: "/etc/secret-data"
+      readOnly: true
+  volumes:
+  - name: secret-volume
+    secret:
+      secretName: my-password
+```
+
