@@ -288,3 +288,6 @@ spec:
       secretName: my-password
 ```
 
+### Ingress
+According to kubernetes.io: _"An Ingress is a collection of rules that allow inbound connections to reach the cluster Services"_
+Is the way to keep outside the Service the ingress to the Pod. If you want to check if Ingress is available you can run the following command: `minikube addons list` so, default of Ingress is disabled and for starting run `minikube addons enable ingress` 
