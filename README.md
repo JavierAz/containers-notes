@@ -291,3 +291,32 @@ spec:
 ### Ingress
 According to kubernetes.io: _"An Ingress is a collection of rules that allow inbound connections to reach the cluster Services"_
 Is the way to keep outside the Service the ingress to the Pod. If you want to check if Ingress is available you can run the following command: `minikube addons list` so, default of Ingress is disabled and for starting run `minikube addons enable ingress` 
+
+### Advanced Topics
+#### Annotations
+We can attach arbitrary non-identify metadata to any objects, in a key-value format. In some cases you can't use annotations to identify and select objects, e.g. while creating a Deployment, we can add a description:
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webserver
+  annotations:
+    description: Deployment based PoC dates 2nd Mar'2022
+```
+
+#### Quota a Limits Management
+We can use for limit some aspects of the Kubernetes cluster, using the ResourceQuota API resource, which  provides constraints that limit aggregate resource consumption per Namespace:
+- **Compute Resource Quota**: cans limits the total sum of compute resources (CPU, memory, etc.) that can be requested in a given Namespace
+- **Storage Resource Quota**: cans limits the total sum of Storage resources (PersistentVolumeClaims, requests.storage, stc)
+- **Object Count Quota**: Cans restrict the number of objects of a given type (pods, ConfigMaps, ReplicationControllers, Services, Secrets, etc.)
+
+#### Autoscaling
+We have a production environment and we need dynamic scaling to add or remove objects from the cluster, based in some characteristics like resource utilization, availability and requirements.
+We can make autoscaling in these:
+- **Horizontal Pod Autoscaler(HPA)**: is an algorithm-based controller API resource with automatically adjust number of replicas in a ReplicaSet, Deployment or Replication Controller based on CPU utilization
+- **Vertical Pod Autoscaler(VPA)**: VPA automatically sets Container resource requirements (CPU and memory) in a pod and dynamically adjusts them in runtime, based on historical utilization data, current resource availability and real-time events
+- **Cluster Autoscaler**: automatically re-sizes the Kubernetes cluster when there are insufficient resources available for new Pods expecting to be scheduled.
+
+#### Jobs and CronJobs
+A Job creates one or more Pods to perform a given task. The Job takes the responsibility of Pod failures, once the task is complete, all the Pods have terminated automatically.
+With Kubernetes 1.4 release, we can also perform Jobs at scheduled times/dates with CronJobs, where a new Job object is created about once per each execution cycle.
