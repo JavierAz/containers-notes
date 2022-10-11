@@ -124,6 +124,31 @@ spec:
         image: gcr.io/google_samples/gb-frontend:v3
 ```
 
+if you want another example, try this one:
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-deployment
+  template:
+    metadata:
+      labels:
+        app: nginx-deployment
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+```
+
 #### Labels
 Labels are key-value pairs attached to kubernetes objects, used to organize and select subset of objects, based on the requirements in place
 
