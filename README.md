@@ -55,6 +55,29 @@ To access the Kubernetes cluster have some methods:
     - System-wide
   - Using `kubectl proxy` command you can authenticate to use the API server
 
+You'll need a configuration because the kubectl config default does not work with minikube, you can check you config with th following command: `kubectl config view` and to modify the config file on linux is in _~/.kube/config_ and modify for the following:
+```
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority: /home/student/.minikube/ca.crt
+    server: https://192.168.99.100:8443
+  name: minikube
+contexts:
+- context:
+    cluster: minikube
+    user: minikube
+  name: minikube
+current-context: minikube
+kind: Config
+preferences: {}
+users:
+- name: minikube
+  user:
+    client-certificate: /home/student/.minikube/profiles/minikube/client.crt
+    client-key: /home/student/.minikube/profiles/minikube/client.key
+```
+
 ### Building blocks
 
 #### Namespaces
