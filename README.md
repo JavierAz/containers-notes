@@ -1,8 +1,9 @@
 # containers-notes
 
 ## Docker
-
-Coming soon!
+### Basic Commands
+If you want see your Docker images only need run the following command: `docker image ls`, in the other hand if you need see the status, or some description run `docker ps -a` .
+Then for start a image you only need run `docker start Dockerimage` and then if you want the logs only run `docker logs Dockerimage` and for stop the image only need `docker stop Dockerimage`, for remove `docker rm Dockerimage` and finally if you want delete a Docker image run `docker image rm Dockerimage`.
 
 ## Kubernetes with  Minikube
 For start a default instance, only needs the following command
