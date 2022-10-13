@@ -1,6 +1,18 @@
 # containers-notes
 
 ## Docker
+### Docker configuration 
+You first need install docker, this is for remove the necessity to add `sudo` before of all docker commands.
+First we need add our user to Docker group or create the group, run the following command:
+```
+sudo groupadd docker
+```
+Then add our user to the group
+```
+sudo usermod -aG docker ${USER}
+```
+Finally you need restart the session for update the changes.
+
 ### Basic Commands
 If you want see your Docker images only need run the following command: `docker image ls`, in the other hand if you need see the status, or some description run `docker ps -a` .
 Then for start a image you only need run `docker start Dockerimage` and then if you want the logs only run `docker logs Dockerimage` and for stop the image only need `docker stop Dockerimage`, for remove `docker rm Dockerimage` and finally if you want delete a Docker image run `docker image rm Dockerimage`.
